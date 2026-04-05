@@ -5,11 +5,6 @@
 #   mkmv -t DESTINATION SOURCE...
 function mkmv
 {
-    mv $@
-    ret=$?
-    # if mv succeeded return
-    (( ! $ret )) && return $ret
-    
     # if -t specified -> mkdir -pv $dest
     # if not -> 
     # src is dir -> mkdir -pv $dest
@@ -24,10 +19,11 @@ function mkmv
 
     dest=${args[i+1]}
     # if dest already exists, mkdir wont fix
-    [[ -e $dest ]] && return $ret
-    [[ -f ${args[i]} && ${dest: -1} != "/" ]] && dest="$(dirname $dest)"
-    mkdir -pv $dest
+    if [[ ! -e $dest ]]; then
+        [[ -f ${args[i]} && ${dest: -1} != "/" ]] && dest="$(dirname $dest)"
+        mkdir -pv $dest
+    fi
 
     mv $@
-    return $?
+    return
 }
