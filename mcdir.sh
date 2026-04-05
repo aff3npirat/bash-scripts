@@ -1,15 +1,7 @@
 #!/bin/bash
 
+# Usage: mcdir [OPTION]... DIRECTORY...
 function mcdir
 {
-    dir="."
-    for arg in "$@"; do
-        if [ "${arg:0:1}" != "-" ]; then
-            dir="$arg"
-            break
-        fi
-    done
-
-    mkdir "$@" && cd "$dir"
-    return
+    mkdir $@ && cd $_
 }
