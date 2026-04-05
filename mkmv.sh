@@ -18,8 +18,7 @@ function mkmv
     done
 
     dest=${args[i+1]}
-    # if dest already exists, mkdir wont fix
-    if [[ ! -e $dest ]]; then
+    if [[ -e ${args[i]} ]]; then
         [[ -f ${args[i]} && ${dest: -1} != "/" ]] && dest="$(dirname $dest)"
         mkdir -pv $dest
     fi
