@@ -5,22 +5,29 @@
 #   mkmv -t DESTINATION SOURCE...
 function mkmv
 {
-    if [[ ( $# -ne 2 || $1 == "-t" ) && ( "$1" != "-t" || $# -lt 3 ) ]]; then
-        mv "$@"
-        return
-    fi
+    mv $@
+    ret=$?
+    # if mv succeeded return
+    (( ! $ret )) && return $ret
+    
+    # if -t specified -> mkdir -pv $dest
+    # if not -> 
+    # src is dir -> mkdir -pv $dest
+    # src is file ->
+    #     dest ends with / -> mkdir -pv $dest
+    #     dest no trailing / -> mkdir -pv dirname $dest
 
-    for arg in "$@"; do
-        if [[ "${arg:0:1}" == "-" && "$arg" != "-t" ]]; then
-            mv "$@"
-            return
-        fi
+    args=("$@"); i=0
+    for (( i=0; $i < ${#}-2; i++ )); do
+        [[ ${args[i] == "-t"} || ${args[i]:0:1} != "-" ]] && break
     done
 
-    dir="$2"
-    [ "$1" != "-t" ] && [ "${dir: -1}" != "/" ] && dir="$(dirname "$dir")"
-    mkdir -p -v "$dir"
+    dest=${args[i+1]}
+    # if dest already exists, mkdir wont fix
+    [[ -e $dest ]] && return $ret
+    [[ -f ${args[i]} && ${dest: -1} != "/" ]] && dest="$(dirname $dest)"
+    mkdir -pv $dest
 
-    mv "$@"
-    return
+    mv $@
+    return $?
 }
