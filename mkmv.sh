@@ -14,7 +14,7 @@ function mkmv
 
     args=("$@"); i=0
     for (( i=0; $i < ${#}-2; i++ )); do
-        [[ ${args[i] == "-t"} || ${args[i]:0:1} != "-" ]] && break
+        [[ ${args[i]} == "-t" || ${args[i]:0:1} != "-" ]] && break
     done
 
     dest=${args[i+1]}
