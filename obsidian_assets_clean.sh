@@ -20,9 +20,9 @@ function parseDirs
     IFSBACK=$IFS
     IFS=$'\n'
     matches="$(grep -roG '!\[\[[^][!]*\]\]' "$1")"
-    for l in $matches; do
+    for l in $matches; do  # word splitting of $matches
         IFS=':'
-        arr=($l)
+        arr=($l)  # word splitting of $l
 
         [[ "${arr[0]}" == "$assets"* ]] && echo "Skipping ${arr[0]}..." && continue
 
